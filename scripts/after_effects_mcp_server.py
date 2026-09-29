@@ -21,7 +21,10 @@ from after_effects_cli import (  # noqa: E402
     run_jsx_in_after_effects,
 )
 
+from laya_decision_gate import evaluate_decision as _laya_eval  # noqa: E402
+
 TOOLS = [
+    {'name': 'after_effects_laya_decide', 'description': 'Evaluate a creative brief or decision for Adobe After Effects using the embedded Laya model (https://github.com/NandhaKishorM/laya) with strict complexity gating. CALL ONLY WHEN NECESSARY for complex/ambiguous multi-branch tasks; for basic tasks, execute directly without calling Laya.', 'inputSchema': {'type': 'object', 'properties': {'state': {'type': 'string', 'description': 'The complex user brief or decision state to evaluate.'}, 'force_laya': {'type': 'boolean', 'description': 'Optional override to force Laya Router evaluation (default: false).'}}, 'required': ['state']}},
     {
         "name": "after_effects_status",
         "description": "Check Adobe After Effects installation, script security prefs, and live connection on macOS or Windows.",
@@ -79,6 +82,12 @@ TOOLS = [
 
 def handle_tool_call(name: str, arguments: dict) -> dict:
     try:
+        if name == "after_effects_laya_decide":
+            res = _laya_eval(
+                state_text=arguments.get("state", ""),
+                force_laya=bool(arguments.get("force_laya", False)),
+            )
+            return {"content": [{"type": "text", "text": json.dumps(res, indent=2)}]}
         if name == "after_effects_status":
             res = cmd_status()
         elif name == "after_effects_inspect_aep":
@@ -131,7 +140,7 @@ def main():
                 "result": {
                     "protocolVersion": "2024-11-05",
                     "capabilities": {"tools": {}},
-                    "serverInfo": {"name": "after-effects-motion-dna", "version": "1.0.0"},
+                    "serverInfo": {"name": "after-effects-motion-dna", "version": "1.1.0"},
                 },
             }
             sys.stdout.write(json.dumps(resp) + "\n")

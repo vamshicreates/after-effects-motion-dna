@@ -66,3 +66,12 @@ git clone https://github.com/vamshicreates/after-effects-motion-dna.git .agents/
 2. **Generate Any Future Motion Graphic from a Text Brief Alone**:
    Once `.motion-dna/motion_dna.json` is cached:
    > **"Using our Motion DNA, build a 60fps kinetic typography and UI card reveal live in After Effects for: [your text brief]."**
+
+---
+
+## What's New in v1.1.0 — Embedded Laya Decision Gate (`NandhaKishorM/laya`)
+
+This skill now embeds **[Laya (`https://github.com/NandhaKishorM/laya`)](https://github.com/NandhaKishorM/laya)** via `scripts/laya_decision_gate.py` with a **Strict Complexity Gate**:
+
+- **Basic Tasks → Direct Manual Execution (Laya Bypassed)**: Simple, explicit commands (*"change comp duration to 10 seconds"*, *"set text layer opacity from 0 to 100"*, *"add Gaussian Blur of 40px"*, *"export frame at 2.5s to PNG"*) bypass Laya completely (`laya_called: false`) and run directly in Adobe After Effects with zero model overhead.
+- **Complex / Ambiguous Creative Briefs → Laya System-1 Router (`from laya import Router`)**: Only when a task requires multi-branch creative routing (`choice`, `score`, `noul`), `scripts/laya_decision_gate.py` invokes Laya's non-autoregressive `Router` in a single forward pass.
